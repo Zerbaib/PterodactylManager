@@ -7,7 +7,7 @@ import disnake
 from disnake.ext import commands
 
 data_folder = 'data'
-data_file = f'{data_folder}users.json'
+data_file = f'{data_folder}/users.json'
 config_file_path = 'config.json'
 local_version = 'version'
 online_version = f'https://raw.githubusercontent.com/Zerbaib/PterodactylManager/main/{local_version}'
