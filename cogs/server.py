@@ -44,11 +44,9 @@ class Server(commands.Cog):
 
         # Fetch the user information from Pterodactyl using the API Key
         user_info_response = requests.get(f"{PTERODACTYL_API_URL}/user", headers={"Authorization": f"Bearer {api_key}"})
-        
-        print(response.user_info_response)
 
         if user_info_response.status_code == 200:
-            print(user_info_response.json())
+            print(user_info_response)
             user_info = user_info_response.json()
             user_pseudo = user_info["username"]
         else:
