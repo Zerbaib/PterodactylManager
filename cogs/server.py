@@ -4,7 +4,6 @@ import requests
 from disnake.ext import commands
 from disnake.ui import View, button
 
-
 class Server(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -43,18 +42,30 @@ class Server(commands.Cog):
         
         api_key = data[str(user_id)]
 
-        try:
-            if server is None:
-                response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/servers",
-                                        headers={"Authorization": f"Bearer {api_key}"})
-                response.raise_for_status()
-                servers = response.json()
+        # Fetch the user information from Pterodactyl using the API Key
+        user_info_response = requests.get(f"{PTERODACTYL_API_URL}/user", headers={"Authorization": f"Bearer {api_key}"})
+        
+        if user_info_response.status_code == 200:
+            user_info = user_info_response.json()
+            user_pseudo = user_info["username"]
+        else:
+            return await ctx.send("⚠️ Unable to retrieve user information.", ephemeral=True)
+
+        if server is None:
+            # Fetch the list of servers associated with the user
+            servers_response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/servers", headers={"Authorization": f"Bearer {api_key}"})
+            
+            if servers_response.status_code == 200:
+                servers = servers_response.json()
                 server_list = "\n".join([f"{server['name']} ({server['id']})" for server in servers])
-                await ctx.send(f"Here is the list of your servers:\n```{server_list}```")
+                await ctx.send(f"Here is the list of your servers, {user_pseudo}:\n```{server_list}```")
             else:
-                response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/server/{server}",
-                                        headers={"Authorization": f"Bearer {api_key}"})
-                response.raise_for_status()
+                return await ctx.send("⚠️ Unable to retrieve the list of servers.", ephemeral=True)
+        else:
+            # Fetch server information for the specified server
+            response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/server/{server}",
+                                    headers={"Authorization": f"Bearer {api_key}"})
+            if response.status_code == 200:
                 server_info = response.json()
                 embed = disnake.Embed(title=f"Server: {server_info['name']}")
                 
@@ -77,8 +88,10 @@ class Server(commands.Cog):
                 view.add_item(button.Button(style=disnake.ButtonStyle.danger, label="Kill", custom_id=f"kill_server_{server_info['id']}"))
 
                 await ctx.send(embed=embed, view=view)
-        except requests.exceptions.RequestException as e:
-            await ctx.send(f"⚠️ Unable to retrieve server information. Error: {str(e)}", ephemeral=True)
+            else:
+                await ctx.send("⚠️ Unable to retrieve server information.")
+
+        return await ctx.send(f'🚧 This command is still under construction {ctx.author.mention}!', ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Server(bot))
