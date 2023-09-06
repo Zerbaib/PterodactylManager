@@ -22,9 +22,11 @@ if not os.path.exists(config_file_path):
     with open(config_file_path, 'w') as config_file:
         token = input("Enter the bot's token:\n")
         prefix = input("Enter the bot's prefix:\n")
+        api_url = input("Enter the Pterodactyl API URL:\n")
         config_data = {
             "TOKEN": token,
-            "PREFIX": prefix
+            "PREFIX": prefix,
+            "PTERODACTYL_API_URL": api_url
         }
         json.dump(config_data, config_file, indent=4)
     with open(config_file_path, 'r') as config_file:

@@ -3,7 +3,7 @@ import disnake
 from disnake.ext import commands
 
 
-class Login(commands.Cog):
+class Logout(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.data_folder = 'data'
@@ -31,4 +31,4 @@ class Login(commands.Cog):
         await ctx.send(f'✅ You have been logged out {ctx.author.mention}!', ephemeral=True)
 
 def setup(bot):
-    bot.add_cog(Login(bot))
+    bot.add_cog(Logout(bot))
