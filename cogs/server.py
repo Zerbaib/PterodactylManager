@@ -1,5 +1,4 @@
 import json
-
 import disnake
 import requests
 from disnake.ext import commands
@@ -44,19 +43,18 @@ class Server(commands.Cog):
         
         api_key = data[str(user_id)]
 
-        if server is None:
-            response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/servers",
-                                    headers={"Authorization": f"Bearer {api_key}"})
-            if response.status_code == 200:
+        try:
+            if server is None:
+                response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/servers",
+                                        headers={"Authorization": f"Bearer {api_key}"})
+                response.raise_for_status()
                 servers = response.json()
                 server_list = "\n".join([f"{server['name']} ({server['id']})" for server in servers])
                 await ctx.send(f"Here is the list of your servers:\n```{server_list}```")
             else:
-                await ctx.send("⚠️ Unable to retrieve the list of servers.", ephemeral=True)
-        else:
-            response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/server/{server}",
-                                    headers={"Authorization": f"Bearer {api_key}"})
-            if response.status_code == 200:
+                response = requests.get(f"{PTERODACTYL_API_URL}/user/{user_id}/server/{server}",
+                                        headers={"Authorization": f"Bearer {api_key}"})
+                response.raise_for_status()
                 server_info = response.json()
                 embed = disnake.Embed(title=f"Server: {server_info['name']}")
                 
@@ -79,10 +77,8 @@ class Server(commands.Cog):
                 view.add_item(button.Button(style=disnake.ButtonStyle.danger, label="Kill", custom_id=f"kill_server_{server_info['id']}"))
 
                 await ctx.send(embed=embed, view=view)
-            else:
-                await ctx.send("⚠️ Unable to retrieve server information.")
-
-        return await ctx.send(f'🚧 This command is still under construction {ctx.author.mention}!', ephemeral=True)
+        except requests.exceptions.RequestException as e:
+            await ctx.send(f"⚠️ Unable to retrieve server information. Error: {str(e)}", ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Server(bot))
