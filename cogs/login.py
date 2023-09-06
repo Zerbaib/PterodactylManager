@@ -6,7 +6,7 @@ from disnake.ext import commands
 class Login(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.data_folder = 'data'
+        self.data_folder = 'data/'
         self.data_file = f'{self.data_folder}users.json'
 
     @commands.Cog.listener()

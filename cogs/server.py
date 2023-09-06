@@ -9,7 +9,7 @@ from disnake.ui import View, button
 class Server(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.data_folder = 'data'
+        self.data_folder = 'data/'
         self.data_file = f'{self.data_folder}users.json'
 
     @commands.Cog.listener()
@@ -40,7 +40,7 @@ class Server(commands.Cog):
         PTERODACTYL_API_URL = config["PTERODACTYL_API_URL"]
 
         if str(user_id) not in data:
-            return await ctx.send("# 🛑 You are not logged.\n## ⚠️ Please do /login <your_api_key>\n### For get your api key please pm an admin", ephemeral=True)
+            return await ctx.send("# 🛑 You are not logged.\n## ⚠️ Please do ``/login <your_api_key>``\n### For get your api key please pm an admin", ephemeral=True)
         
         api_key = data[str(user_id)]
 

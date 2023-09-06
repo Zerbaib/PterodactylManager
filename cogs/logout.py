@@ -6,7 +6,7 @@ from disnake.ext import commands
 class Logout(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.data_folder = 'data'
+        self.data_folder = 'data/'
         self.data_file = f'{self.data_folder}users.json'
 
     @commands.Cog.listener()
@@ -26,9 +26,13 @@ class Logout(commands.Cog):
     @commands.slash_command(name='logout', description='Logout of your Pterodactyl account')
     async def logout(self, ctx):
         data = self.get_data()
-        data.pop(ctx.author.id)
-        self.save_data(data)
-        await ctx.send(f'✅ You have been logged out {ctx.author.mention}!', ephemeral=True)
+        user_id = str(ctx.author.id)
+        if user_id in data:
+            data.pop(user_id)
+            self.save_data(data)
+            await ctx.send(f'✅ You have been logged out {ctx.author.mention}!', ephemeral=True)
+        else:
+            await ctx.send("You are not logged in.", ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Logout(bot))
