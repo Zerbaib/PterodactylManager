@@ -14,7 +14,7 @@ class HelpCog(commands.Cog):
             color=disnake.Color.green()
         )
 
-        for command in self.bot.commands:
+        for command in self.bot.slash_commands:
             if not command.hidden:
                 embed.add_field(
                     name=f"**{self.bot.prefix}{command.name}**",
