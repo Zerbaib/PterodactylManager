@@ -24,7 +24,7 @@ class HelpCog(commands.Cog):
             )
 
             for command in self.bot.slash_commands:
-                if command.description is not None:
+                if command.description is None:
                     descr = "```Unknown```"
                 else:
                     descr = f"```{command.description}```"
