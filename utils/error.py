@@ -12,7 +12,7 @@ def error_embed(e):
     Returns:
         disnake.Embed: The error embed.
     """
-    issue_link = f"{online_version}/issues/new?assignees=Zerbaib&labels=bug"
+    issue_link = f"{Repolink}/issues/new?assignees=Zerbaib&labels=bug"
     embed = disnake.Embed(
         title=f"A error as poped !",
         description=f"The exception is\n\n```{e}```",

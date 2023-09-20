@@ -9,5 +9,6 @@ data_file = f'{data_folder}users.json'
 
 # Version path
 RepoName = 'PterodactylManager'
+Repolink = f"https://github.com/Zerbaib/{RepoName}"
 local_version = './version'
 online_version = f'https://raw.githubusercontent.com/Zerbaib/{RepoName}/main/{local_version}'
