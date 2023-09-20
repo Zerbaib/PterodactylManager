@@ -6,11 +6,8 @@ import aiohttp
 import disnake
 from disnake.ext import commands
 
-data_folder = 'data'
-data_file = f'{data_folder}/users.json'
-config_file_path = 'config.json'
-local_version = 'version'
-online_version = f'https://raw.githubusercontent.com/Zerbaib/PterodactylManager/main/{local_version}'
+from utils.opener import *
+from utils.var import *
 
 if not os.path.exists(data_folder):
     os.makedirs(data_folder)
@@ -31,20 +28,14 @@ if not os.path.exists(config_file_path):
             "PTERODACTYL_API_KEY": api_key
         }
         json.dump(config_data, config_file, indent=4)
-    with open(config_file_path, 'r') as config_file:
-        config = json.load(config_file)
+    config = get_config()
 else:
-    with open(config_file_path, 'r') as config_file:
-        config = json.load(config_file)
+    config = get_config()
 
 token = config["TOKEN"]
 prefix = config["PREFIX"]
 
-bot = commands.Bot(
-    command_prefix=prefix,
-    intents=disnake.Intents.all(),
-    case_insensitive=True
-)
+bot = commands.Bot(command_prefix=prefix, intents=disnake.Intents.all(), case_insensitive=True)
 bot.remove_command('help')
 
 @bot.event
@@ -61,8 +52,7 @@ async def on_ready():
             else:
                 bot_repo_version = "Unknown"
 
-    with open(local_version, 'r') as version_file:
-        bot_version = version_file.read().strip()
+    bot_version = get_bot_repo_version()
 
     if bot_version != bot_repo_version:
         print()
@@ -80,11 +70,11 @@ async def on_ready():
     print(f"🔱 Python version: {platform.python_version()}")
     print('===============================================')
 
-for filename in os.listdir('cogs'):
+for filename in os.listdir(cog_folder):
     if filename.endswith('.py'):
         cog_name = filename[:-3]
         try:
-            bot.load_extension(f'cogs.{cog_name}')
+            bot.load_extension(f'{cog_import}{cog_name}')
         except Exception as e:
             print(f"🌪️  Error during '{cog_name}' loading:\n\n{e}")
 
