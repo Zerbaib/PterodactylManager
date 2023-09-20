@@ -23,10 +23,15 @@ class HelpCog(commands.Cog):
                 color=disnake.Color.green()
             )
 
+            if command.description is not None:
+                descr = "```Unknown```"
+            else:
+                descr = f"```{command.description}```"
+
             for command in self.bot.slash_commands:
                 embed.add_field(
                     name=f"**{self.bot.command_prefix}{command.name}**",
-                    value=command.description or "```Unknown```",
+                    value=descr,
                     inline=False
                 )
 
