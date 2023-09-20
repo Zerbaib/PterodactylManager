@@ -1,6 +1,8 @@
 import disnake
 from disnake.ext import commands
 
+from utils.var import *
+from utils.error import *
 
 class HelpCog(commands.Cog):
     def __init__(self, bot):
@@ -14,20 +16,23 @@ class HelpCog(commands.Cog):
 
     @commands.slash_command(name="help", description="See all the commands of the bot and how to use them")
     async def help(self, ctx):
-        embed = disnake.Embed(
-            title="List of commands",
-            description="Here you wan find all the commands of the bot and their us",
-            color=disnake.Color.green()
-        )
-
-        for command in self.bot.slash_commands:
-            embed.add_field(
-                name=f"**{self.bot.command_prefix}{command.name}**",
-                value=command.descrition or "```Unknown```",
-                inline=False
+        try:
+            embed = disnake.Embed(
+                title="List of commands",
+                description="Here you wan find all the commands of the bot and their us",
+                color=disnake.Color.green()
             )
 
-        await ctx.send(embed=embed)
+            for command in self.bot.slash_commands:
+                embed.add_field(
+                    name=f"**{self.bot.command_prefix}{command.name}**",
+                    value=command.descrition or "```Unknown```",
+                    inline=False
+                )
+
+            await ctx.send(embed=embed)
+        except Exception as e:
+            await ctx.send(embed=error_embed(e))
 
 def setup(bot):
     bot.add_cog(HelpCog(bot))
