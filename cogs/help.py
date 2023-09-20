@@ -6,6 +6,12 @@ class HelpCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print('========== ⚙️ HELP ⚙️ ==========')
+        print('🔩 /help has been loaded')
+        print()
+
     @commands.slash_command(name="help", description="See all the commands of the bot and how to use them")
     async def help(self, ctx):
         embed = disnake.Embed(
