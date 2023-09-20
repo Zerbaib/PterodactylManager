@@ -15,12 +15,11 @@ class HelpCog(commands.Cog):
         )
 
         for command in self.bot.slash_commands:
-            if not command.hidden:
-                embed.add_field(
-                    name=f"**{self.bot.prefix}{command.name}**",
-                    value=command.help or "```Unknown```",
-                    inline=False
-                )
+            embed.add_field(
+                name=f"**{self.bot.prefix}{command.name}**",
+                value=command.help or "```Unknown```",
+                inline=False
+            )
 
         await ctx.send(embed=embed)
 
