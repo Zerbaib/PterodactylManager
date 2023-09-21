@@ -1,8 +1,9 @@
 import disnake
 from disnake.ext import commands
 
-from utils.var import *
 from utils.error import *
+from utils.var import *
+
 
 class HelpCog(commands.Cog):
     def __init__(self, bot):
