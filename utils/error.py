@@ -1,5 +1,7 @@
 import disnake
+
 from utils.var import *
+
 
 def error_embed(e):
     """
